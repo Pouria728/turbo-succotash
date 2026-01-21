@@ -3,54 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فروشگاه خودروهای کلاسیک اروپایی</title>
+  <title>جزئیات محصول</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <nav>
-      <h1>فروشگاه خودروهای اروپایی کلاسیک</h1>
+      <h1><a href="index.html" style="color: white; text-decoration: none;">فروشگاه خودروهای کلاسیک</a></h1>
       <a href="add-product.html">➕ اضافه کردن محصول</a>
-      <a href="cart.html">🛒 سبد خرید: <span id="cartCount">0</span></a>
+      <a href="cart.html">🛒 سبد خرید</a>
     </nav>
   </header>
 
-  <main>
-    <div id="productList"></div>
+  <main id="productDetail">
+    <img id="productImage" alt="">
+    <h1 id="name"></h1>
+    <p id="desc"></p>
+    <p id="price"></p>
+    <button onclick="addToCart()">افزودن به سبد خرید</button>
   </main>
 
   <footer>
     <p>&copy; 2026 فروشگاه خودروهای کلاسیک. تمامی حقوق محفوظ است.</p>
   </footer>
 
-  <!-- آرایه محصولات -->
   <script src="products.js"></script>
-
-  <!-- نمایش محصولات -->
   <script>
     // Load products from localStorage or default
     let products = JSON.parse(localStorage.getItem("products")) || window.products || [];
 
-    const list = document.getElementById("productList");
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+    const product = products.find(p => p.id == productId);
 
-    products.forEach(p => {
-      list.innerHTML += `
-        <div class="product">
-          <img src="${p.image}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <p>قیمت: ${p.price.toLocaleString()} تومان</p>
-          <a href="product.html?id=${p.id}">مشاهده جزئیات</a>
-        </div>
-      `;
-    });
+    document.getElementById("name").innerText = product.name;
+    document.getElementById("desc").innerText = product.desc;
+    document.getElementById("price").innerText = "قیمت: " + product.price.toLocaleString() + " تومان";
 
-    // Update cart count
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const count = cart.reduce((sum, item) => sum + item.qty, 0);
-      document.getElementById("cartCount").innerText = count;
+    const img = document.getElementById("productImage");
+    img.src = product.image;
+    img.alt = product.name;
+
+    function addToCart() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let item = cart.find(p => p.id == productId);
+
+      if (item) item.qty++;
+      else cart.push({ ...product, qty: 1 });
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("به سبد خرید اضافه شد");
     }
-    updateCartCount();
   </script>
 
 </body>
