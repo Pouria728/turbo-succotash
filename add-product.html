@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اضافه کردن محصول جدید</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>فروشگاه خودروهای اروپایی کلاسیک</h1>
+      <a href="index.html">🏠 صفحه اصلی</a>
+      <a href="cart.html">🛒 سبد خرید: <span id="cartCount">0</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>اضافه کردن ماشین جدید</h2>
+    <form id="addProductForm">
+      <label for="name">نام ماشین:</label>
+      <input type="text" id="name" required><br><br>
+
+      <label for="price">قیمت (تومان):</label>
+      <input type="number" id="price" required><br><br>
+
+      <label for="image">تصویر ماشین:</label>
+      <input type="file" id="image" accept="image/*" required><br><br>
+
+      <label for="desc">توضیحات:</label>
+      <textarea id="desc" required></textarea><br><br>
+
+      <button type="submit">اضافه کردن محصول</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 فروشگاه خودروهای کلاسیک. تمامی حقوق محفوظ است.</p>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+    // Update cart count
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById("cartCount").innerText = count;
+    }
+    updateCartCount();
+
+    // Handle form submission
+    document.getElementById("addProductForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const price = parseInt(document.getElementById("price").value);
+      const desc = document.getElementById("desc").value;
+      const imageFile = document.getElementById("image").files[0];
+
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const image = event.target.result; // base64
+
+          // Get existing products from localStorage or default
+          let products = JSON.parse(localStorage.getItem("products")) || [];
+          if (products.length === 0) {
+            // Load from products.js if not in localStorage
+            products = window.products || [];
+          }
+
+          // Generate new ID
+          const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+
+          // Add new product
+          const newProduct = { id: newId, name, price, image, desc };
+          products.push(newProduct);
+
+          // Save to localStorage
+          localStorage.setItem("products", JSON.stringify(products));
+
+          alert("محصول جدید اضافه شد!");
+          // Redirect to index
+          window.location.href = "index.html";
+        };
+        reader.readAsDataURL(imageFile);
+      }
+    });
+  </script>
+</body>
+</html>
