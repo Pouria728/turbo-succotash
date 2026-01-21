@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جزئیات محصول</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <h1><a href="index.html" style="color: white; text-decoration: none;">فروشگاه خودروهای کلاسیک</a></h1>
+      <a href="cart.html">🛒 سبد خرید</a>
+    </nav>
+  </header>
+
+  <main id="productDetail">
+    <img id="productImage" alt="">
+    <h1 id="name"></h1>
+    <p id="desc"></p>
+    <p id="price"></p>
+    <button onclick="addToCart()">افزودن به سبد خرید</button>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 فروشگاه خودروهای کلاسیک. تمامی حقوق محفوظ است.</p>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+    const product = products.find(p => p.id == productId);
+
+    document.getElementById("name").innerText = product.name;
+    document.getElementById("desc").innerText = product.desc;
+    document.getElementById("price").innerText = "قیمت: " + product.price.toLocaleString() + " تومان";
+
+    const img = document.getElementById("productImage");
+    img.src = product.image;
+    img.alt = product.name;
+
+    function addToCart() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let item = cart.find(p => p.id == productId);
+
+      if (item) item.qty++;
+      else cart.push({ ...product, qty: 1 });
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("به سبد خرید اضافه شد");
+    }
+  </script>
+
+</body>
+</html>

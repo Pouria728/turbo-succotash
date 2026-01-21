@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سبد خرید</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <h1><a href="index.html" style="color: white; text-decoration: none;">فروشگاه خودروهای کلاسیک</a></h1>
+      <a href="index.html">بازگشت به فروشگاه</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>سبد خرید شما</h2>
+    <div id="cartList"></div>
+    <p id="totalPrice"></p>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 فروشگاه خودروهای کلاسیک. تمامی حقوق محفوظ است.</p>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartList = document.getElementById("cartList");
+
+    cartList.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      cartList.innerHTML = "<p>سبد خرید شما خالی است.</p>";
+    } else {
+      cart.forEach(p => {
+        total += p.price * p.qty;
+        cartList.innerHTML += `
+          <div>
+            <img src="${p.image}" alt="${p.name}">
+            <div>
+              <b>${p.name}</b><br>
+              ${p.desc}<br>
+              تعداد: ${p.qty}<br>
+              قیمت: ${(p.price * p.qty).toLocaleString()} تومان
+            </div>
+            <button onclick="removeFromCart(${p.id})">حذف</button>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("totalPrice").innerText = "جمع کل: " + total.toLocaleString() + " تومان";
+
+    function removeFromCart(id) {
+      cart = cart.filter(p => p.id != id);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>

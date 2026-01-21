@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فروشگاه خودروهای کلاسیک اروپایی</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>فروشگاه خودروهای اروپایی کلاسیک</h1>
+      <a href="cart.html">🛒 سبد خرید: <span id="cartCount">0</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="productList"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 فروشگاه خودروهای کلاسیک. تمامی حقوق محفوظ است.</p>
+  </footer>
+
+  <!-- آرایه محصولات -->
+  <script src="products.js"></script>
+
+  <!-- نمایش محصولات -->
+  <script>
+    const list = document.getElementById("productList");
+
+    products.forEach(p => {
+      list.innerHTML += `
+        <div class="product">
+          <img src="${p.image}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p>قیمت: ${p.price.toLocaleString()} تومان</p>
+          <a href="product.html?id=${p.id}">مشاهده جزئیات</a>
+        </div>
+      `;
+    });
+
+    // Update cart count
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById("cartCount").innerText = count;
+    }
+    updateCartCount();
+  </script>
+
+</body>
+</html>
