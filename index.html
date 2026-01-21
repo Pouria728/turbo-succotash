@@ -10,6 +10,7 @@
   <header>
     <nav>
       <h1>فروشگاه خودروهای اروپایی کلاسیک</h1>
+      <a href="add-product.html">➕ اضافه کردن محصول</a>
       <a href="cart.html">🛒 سبد خرید: <span id="cartCount">0</span></a>
     </nav>
   </header>
@@ -27,6 +28,9 @@
 
   <!-- نمایش محصولات -->
   <script>
+    // Load products from localStorage or default
+    let products = JSON.parse(localStorage.getItem("products")) || window.products || [];
+
     const list = document.getElementById("productList");
 
     products.forEach(p => {
